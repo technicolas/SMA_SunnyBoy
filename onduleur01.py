@@ -18,8 +18,8 @@ client.auth()
 if not client.check_connection():
     print("[/!\\] Connexion impossible, revérifie SVP")
 else:
-    print("[+] Connecté au SMA Sunny Boy 5.0 de Bruno")
-    print("[*] --------------------------------------")
+    print("[+] Connecté au SMA Sunny Boy 5.0")
+    print("[*] -----------------------------")
 
 # Production instantanée
     power_current = client.get_value(Key.power_current)
