@@ -1,8 +1,9 @@
 from sma_sunnyboy import WebConnect, Key, Right
+from datetime import timedelta
 # from machine import Pin, I2C
 
-address = "my_ipaddr"
-password = "my_pw"
+address = "my_ipADDR"
+password = "myPwd"
 right = Right.USER
 
 # i2c = I2C(0, scl=Pin(17), sda=Pin(16))
@@ -18,8 +19,8 @@ client.auth()
 if not client.check_connection():
     print("[/!\\] Connexion impossible, revérifie SVP")
 else:
-    print("[+] Connecté au SMA Sunny Boy 5.0")
-    print("[*] -----------------------------")
+    print("[+] SMA Sunny Boy 5.0")
+    print("[*] -----------------")
 
 # Production instantanée
     power_current = client.get_value(Key.power_current)
@@ -35,12 +36,30 @@ else:
     print("@IP_Onduleur: %s / Masque: %s " % (ethernet_ip,ethernet_netmask))
     
 # Temps de service
-    service_time = client.get_value(Key.service_time)
-    print(f"Temps de service: {service_time/3600:.3f} heures ou {service_time/3600/24/365:.6f} années")
+    def format_duration(seconds):
+        delta = timedelta(seconds=seconds)
+        total_days = delta.days
+        years = total_days // 365
+        months = (total_days % 365) // 30
+        days = (total_days % 365) % 30
+        hours, remainder = divmod(delta.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return years, months, days, hours, minutes, seconds
 
-# Durée d'injection
+    # Récupération des valeurs
+    service_time = client.get_value(Key.service_time)
     injection_time = client.get_value(Key.injection_time)
-    print(f"Temps d’injection: {injection_time/3600:.3f} heures ou {injection_time/3600/24/365:.6f} années")
+
+    # Formatage
+    service = format_duration(service_time)
+    injection = format_duration(injection_time)
+
+    # Affichage en tableau
+    print(f"{'Type':<15} {'Années':<6} {'Mois':<5} {'Jours':<6} {'Heures':<7} {'Minutes':<8} {'Secondes':<9}")
+    print(f"{'-'*60}")
+    print(f"{'Service':<15} {service[0]:<6} {service[1]:<5} {service[2]:<6} {service[3]:<7} {service[4]:<8} {service[5]:<9}")
+    print(f"{'Injection':<15} {injection[0]:<6} {injection[1]:<5} {injection[2]:<6} {injection[3]:<7} {injection[4]:<8} {injection[5]:<9}")
+
 
     print("[+] Déconnexion..")
     if client.logout() is False:
