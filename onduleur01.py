@@ -23,16 +23,15 @@ client.auth()
 if not client.check_connection():
     print("[/!\\] Connexion impossible, revérifie SVP")
 else:
-    print("[+] SMA Sunny Boy 5.0")
-    print("[*] -----------------")
+    print("SMA Sunny Boy 5.0")
+    print(f"{'-'*17}")
 
 # Production instantanée
     power_current = client.get_value(Key.power_current)
-    print("Puissance prod.: %d%s" % (power_current, Key.power_current["unit"]))
-
 # Production totale
     power_total = client.get_value(Key.power_total)
-    print("Prod. tot.: %d%s" % (power_total, Key.power_total["unit"]))
+
+    print("Puissance prod.: %d %s / Prod. tot.: %d %s" % (power_current, Key.power_current["unit"], power_total, Key.power_total["unit"]))
 
 # Partie réseau
     ethernet_ip = client.get_value(Key.ethernet_ip)
@@ -54,21 +53,21 @@ else:
     service_time = client.get_value(Key.service_time)
     injection_time = client.get_value(Key.injection_time)
 
-    # Formatage
+    # Formatage (récupération du tableau des valeurs)
     service = format_duration(service_time)
     injection = format_duration(injection_time)
 
     # Affichage en tableau
     print(f"{'Type':<15} {'Années':<6} {'Mois':<5} {'Jours':<6} {'Heures':<7} {'Minutes':<8} {'Secondes':<9}")
-    print(f"{'-'*60}")
+    print(f"{'-'*61}")
     print(f"{'Service':<15} {service[0]:<6} {service[1]:<5} {service[2]:<6} {service[3]:<7} {service[4]:<8} {service[5]:<9}")
     print(f"{'Injection':<15} {injection[0]:<6} {injection[1]:<5} {injection[2]:<6} {injection[3]:<7} {injection[4]:<8} {injection[5]:<9}")
 
 
-    print("[+] Déconnexion..")
+    print("[INFO] Déconnexion...")
     if client.logout() is False:
-        print("[!] Erreur dans la déconnexion!")
-    print("[+] Terminé.")
+        print("[INFO] Erreur dans la déconnexion!")
+    print("[INFO] OK.")
     
 # oled.fill(0)
 # oled.text("Prod. inst:", 0, 0)
