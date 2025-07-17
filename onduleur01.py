@@ -1,10 +1,14 @@
+import json
 from sma_sunnyboy import WebConnect, Key, Right
 from datetime import timedelta
 # from machine import Pin, I2C
 
-address = "my_ipADDR"
-password = "myPwd"
-right = Right.USER
+with open("config.json") as f:
+    config = json.load(f)
+
+address = config["address"]
+password = config["password"]
+right = getattr(Right, config.get("right", "USER"))
 
 # i2c = I2C(0, scl=Pin(17), sda=Pin(16))
 # oled = ssd1306.SSD1306_I2C(128, 64, i2c)
